@@ -86,6 +86,34 @@ def setup_timeframe():
         output_string = "today 5-y"
     return output_string
 
+'''
+Basic function of pytrends, 
+analyze the keyword by interest over time or region, 
+and give you other suggestions of keywords.
+Take input with pytrend_object, keyword_list, timeframe, geo.
+return a pandas dataframe of interest over time and interest by region.
+'''
+def analyze(pytrend_object,keyword_list, timeframe, geo):
+    #Build a payload
+    pytrend_object.build_payload(keyword_list, cat=0, timeframe=timeframe, geo=geo, gprop='')
+    
+    # Interest Over Time
+    interest_over_time_df = pytrend_object.interest_over_time()
+    print("針對指定時間分析....")
+    print(interest_over_time_df.head())
+    
+    # Interest by Region
+    interest_by_region_df = pytrend_object.interest_by_region()
+    print("針對指定地區分析....")
+    print(interest_by_region_df.head())
+    
+    # Related Queries, returns a dictionary of dataframes
+    related_queries_dict = pytrend_object.related_queries()
+    print("相關關鍵字的搜尋關鍵字 ::")
+    print(related_queries_dict)
+    
+    return interest_over_time_df, interest_by_region_df
+
 def main():
     pytrend = setup_pytrend()
     kw_list = get_input()
@@ -94,6 +122,7 @@ def main():
     print("Geo :: ", geo)
     timeframe = setup_timeframe()
     print("timeframe :: ", timeframe)
+    iot, ibr = analyze(pytrend, kw_list, timeframe, geo)
 
 if __name__ == '__main__':
     main()
