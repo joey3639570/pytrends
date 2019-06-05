@@ -8,7 +8,7 @@ Created on Wed Jun  5 02:09:23 2019
 import pandas as pd
 from pytrends.request import TrendReq
 
-geo_list = ['TW','US','World']
+geo_list = ['TW','US','']
 
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
 # Return a pytrend object for you to call other function
