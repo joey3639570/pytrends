@@ -7,6 +7,8 @@ Created on Wed Jun  5 02:09:23 2019
 
 import pandas as pd
 from pytrends.request import TrendReq
+import matplotlib.pyplot as plt
+import numpy as np
 
 geo_list = ['TW','US','']
 
@@ -69,6 +71,7 @@ Seems to only work for 1, 4 hours only
 #Function for setting up timeframe , will return string.
 def setup_timeframe():
     mode = input("選擇你要搜尋的時間範圍:\n - 特定日期範圍輸入0\n - 幾個月內輸入1\n - 幾天內輸入2\n - 幾小時內輸入3\n - 全範圍請輸入4\n - 五年內請輸入5\n請輸入::")
+    mode = int(mode)
     if mode == 0:
         output_string = input("輸入格式範例 2016-12-14 2017-01-25\n請輸入:")
     elif mode == 1:
@@ -123,6 +126,15 @@ def main():
     timeframe = setup_timeframe()
     print("timeframe :: ", timeframe)
     iot, ibr = analyze(pytrend, kw_list, timeframe, geo)
+    np_iot = iot.values
+    draw = np.array([],np.int32)
+    np_ibr = ibr.values
+    for i in range(0,len(np_iot)):
+        print(np_iot[i][0])
+        draw = np.hstack((draw,np_iot[i][0]))
+    plt.plot(draw)
+    
+    
 
 if __name__ == '__main__':
     main()
