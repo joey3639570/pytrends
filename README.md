@@ -2,7 +2,8 @@
 ## For the NCKU class 開放資料與智慧生活 期末project
 - 目前主要都更新在module_google_trends.py，需要其功能可以嘗試import此py
 - 目前所需套件 numpy, pandas, matplotlib, pytrends，安裝方法參見下區塊
-```pip install numpy pandas matplotlib pytrends
+```
+pip install numpy pandas matplotlib pytrends
 ```
 - 詳細使用方法可以參閱python檔案內的註解
 - 目前只以interest over time 作為主要數據
