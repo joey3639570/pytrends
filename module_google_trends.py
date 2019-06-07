@@ -22,15 +22,17 @@ def setup_pytrend():
 # Return a keyword list.
 def get_input():
     keyword_list = []
+    num_keyword = 0
     for i in range(0,5):
         keyword = input("請輸入您的關鍵字，最多五個，輸入-1結束輸入 : ")
         keyword = [keyword]
         if(keyword !=  ['-1']):
+            num_keyword += 1
             keyword_list.append(keyword[0])
             print(keyword[0], "added. Your list : ", keyword_list)
         else:
             break
-    return keyword_list
+    return keyword_list,num_keyword
 
 # Get the asked geo from user, only choose from 'US, TW, World' now.
 def select_geo():
@@ -117,23 +119,77 @@ def analyze(pytrend_object,keyword_list, timeframe, geo):
     
     return interest_over_time_df, interest_by_region_df
 
+# Take numpy array of the dataframe of iot and number of keyword.
+# Output the picture of iot of keywords
+def draw_iot(dataframe,num_keyword):
+    nparray = dataframe.values
+    head = dataframe.columns.values
+    #Get the date
+    idx = dataframe.index.tolist()
+    #split is for putting the ticks in the x axis.
+    split = np.array_split(idx,10)
+    #ticks need location to put in.
+    location = np.arange(len(nparray))
+    loc_split = np.array_split(location,10)
+    #Setting up the ticks should be put in.
+    xticks_location = []
+    xticks_list = []
+    for i in range(0,10):
+        xticks_location.append(loc_split[i][0])
+        #print(xticks_location)
+        xticks_list.append(split[i][0])
+        #print(xticks_list)
+    #Setting up the picture
+    for i in range(0,num_keyword):
+        draw = np.array([],np.int32)
+        for j in range(0,len(nparray)):
+            draw = np.hstack((draw,nparray[j][i]))
+        plt.plot(draw, label=head[i])
+    plt.title('Interest over Time')
+    plt.legend()
+    plt.xticks(xticks_location , xticks_list, rotation='vertical')
+    plt.show()
+
+#Trying to output histogram of ibr, not done yet.
+'''
+def draw_ibr(nparray,num_keyword,cities_list):
+    print(nparray)
+    for i in range(0,num_keyword):
+        draw = np.array([],np.int32)
+        for j in range(0,len(nparray)):
+            draw = np.hstack((draw,nparray[j][i]))
+            print(nparray[j][i])
+        label_list = cities_list
+        x = range(len(nparray))
+        plt.xticks(label_list)
+        plt.bar(left = x,height=draw)
+        plt.show()
+'''
+
+# Take a dataframe as input, 
+# Output the correlation coefficient of the data
+def correlation(dataframe):
+    dataframe = dataframe.drop(['isPartial'],axis=1)
+    corr = dataframe.corr(method='pearson')
+    return corr
+    
 def main():
     pytrend = setup_pytrend()
-    kw_list = get_input()
+    kw_list,num_keyword = get_input()
     print("kw_list :: ", kw_list)
     geo = select_geo()
     print("Geo :: ", geo)
     timeframe = setup_timeframe()
     print("timeframe :: ", timeframe)
     iot, ibr = analyze(pytrend, kw_list, timeframe, geo)
-    np_iot = iot.values
-    draw = np.array([],np.int32)
-    np_ibr = ibr.values
-    for i in range(0,len(np_iot)):
-        print(np_iot[i][0])
-        draw = np.hstack((draw,np_iot[i][0]))
-    plt.plot(draw)
-    
+    #print(iot.columns.values)
+    #print(iot.index.tolist())
+    #np_ibr = ibr.values
+    draw_iot(iot,num_keyword)
+    #print(ibr.index.tolist())
+    #draw_ibr(np_ibr,num_keyword,ibr.index.tolist())
+    corr = correlation(iot)
+    print("Correlation ::\n",corr)
     
 
 if __name__ == '__main__':
