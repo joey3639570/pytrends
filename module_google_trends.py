@@ -179,9 +179,9 @@ def get_related_keyword(keyword_list, related_queries_dict):
     for key in keyword_list:
         # There are rising keywords and top keywords in the related_queries_dict, I deicde to take both
         top = related_queries_dict[key]['top']
-        print(top)
+        #print(top)
         rising = related_queries_dict[key]['rising']
-        print(rising)
+        #print(rising)
         # Only get the keyword out
         top_list = top.loc[:,'query']
         top_list = top_list.tolist()
@@ -215,10 +215,10 @@ def analyze_for_more_than_five(pytrend_object,keylist, timeframe, geo):
         pytrend_object.build_payload(keyword_list, cat=0, timeframe=timeframe, geo=geo, gprop='')
         # Interest Over Time
         interest_over_time_df = pytrend_object.interest_over_time()
-        print(interest_over_time_df[key].tolist())
-        print(key)
+        #print(interest_over_time_df[key].tolist())
+        #print(key)
         df_dict[key] = interest_over_time_df[key].tolist()
-    print(df_dict)
+    #print(df_dict)
     df = pd.DataFrame(df_dict)
     return df
         
