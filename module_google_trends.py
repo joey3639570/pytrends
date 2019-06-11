@@ -117,7 +117,7 @@ def analyze(pytrend_object,keyword_list, timeframe, geo):
     print("相關關鍵字的搜尋關鍵字 ::")
     print(related_queries_dict)
     
-    return interest_over_time_df, interest_by_region_df
+    return interest_over_time_df, interest_by_region_df, related_queries_dict
 
 # Take numpy array of the dataframe of iot and number of keyword.
 # Output the picture of iot of keywords
@@ -172,6 +172,28 @@ def correlation(dataframe):
     dataframe = dataframe.drop(['isPartial'],axis=1)
     corr = dataframe.corr(method='pearson')
     return corr
+
+def get_related_keyword(keyword_list, related_queries_dict):
+    key_dict = {}
+    for key in keyword_list:
+        # There are rising keywords and top keywords in the related_queries_dict, I deicde to take both
+        top = related_queries_dict[key]['top']
+        rising = related_queries_dict[key]['rising']
+        # Only get the keyword out
+        top_list = top.loc[:,'query']
+        rising_list = rising.loc[:,'query']
+        top_list = top_list.tolist()
+        rising_list = rising_list.tolist()
+        #print(top_list)
+        #print(rising_list)
+        # Combining two list into one
+        related_keyword = top_list + rising_list
+        #print(related_keyword)
+        # This part is for deleting replicated keyword
+        related_keyword_list = list(set(related_keyword))
+        #print(related_keyword_list)
+        key_dict[key] = related_keyword_list
+    return key_dict
     
 def main():
     pytrend = setup_pytrend()
@@ -181,10 +203,13 @@ def main():
     print("Geo :: ", geo)
     timeframe = setup_timeframe()
     print("timeframe :: ", timeframe)
-    iot, ibr = analyze(pytrend, kw_list, timeframe, geo)
+    iot, ibr, rqd = analyze(pytrend, kw_list, timeframe, geo)
     #print(iot.columns.values)
     #print(iot.index.tolist())
     #np_ibr = ibr.values
+    print("----")
+    key_dict = get_related_keyword(kw_list,rqd)
+    print(key_dict)
     draw_iot(iot,num_keyword)
     #print(ibr.index.tolist())
     #draw_ibr(np_ibr,num_keyword,ibr.index.tolist())
