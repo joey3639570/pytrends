@@ -9,6 +9,8 @@ import pandas as pd
 from pytrends.request import TrendReq
 import matplotlib.pyplot as plt
 import numpy as np
+import time
+import random as rd
 
 geo_list = ['TW','US','']
 
@@ -72,7 +74,7 @@ Seems to only work for 1, 4 hours only
 '''
 #Function for setting up timeframe , will return string.
 def setup_timeframe():
-    mode = input("選擇你要搜尋的時間範圍:\n - 特定日期範圍輸入0\n - 幾個月內輸入1\n - 幾天內輸入2\n - 幾小時內輸入3\n - 全範圍請輸入4\n - 五年內請輸入5\n請輸入::")
+    mode = input("- 註: 如果關鍵字較多，建議將搜尋時間範圍縮小一點。 -\n選擇你要搜尋的時間範圍:\n - 特定日期範圍輸入0\n - 幾個月內輸入1\n - 幾天內輸入2\n - 幾小時內輸入3\n - 全範圍請輸入4\n - 五年內請輸入5\n請輸入::")
     mode = int(mode)
     if mode == 0:
         output_string = input("輸入格式範例 2016-12-14 2017-01-25\n請輸入:")
@@ -183,8 +185,12 @@ def get_related_keyword(keyword_list, related_queries_dict):
         rising = related_queries_dict[key]['rising']
         #print(rising)
         # Only get the keyword out
-        top_list = top.loc[:,'query']
-        top_list = top_list.tolist()
+        top_list = []
+        if(top is None):
+            top_list =[]
+        else:
+            top_list = top.loc[:,'query']
+            top_list = top_list.tolist()
         rising_list = []
         if(rising is None):
             rising = []
@@ -212,10 +218,11 @@ def analyze_for_more_than_five(pytrend_object,keylist, timeframe, geo):
     for key in keylist:
         keyword_list = [key]
         #Build a payload
+        print("Analyzing keyword :: ", key)
         pytrend_object.build_payload(keyword_list, cat=0, timeframe=timeframe, geo=geo, gprop='')
         # Interest Over Time
         interest_over_time_df = pytrend_object.interest_over_time()
-        #print(interest_over_time_df[key].tolist())
+        print(interest_over_time_df[key].tolist())
         #print(key)
         df_dict[key] = interest_over_time_df[key].tolist()
     #print(df_dict)
