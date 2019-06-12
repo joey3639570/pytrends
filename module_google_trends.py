@@ -229,10 +229,26 @@ def analyze_for_more_than_five(pytrend_object,keylist, timeframe, geo):
     #print(df_dict)
     df = pd.DataFrame(df_dict)
     return df
-        
+
+def list_to_json(kw_list,timeframe='today 1-m',geo='TW'):
+    pytrend = TrendReq()
+    pytrend.build_payload(kw_list, cat=0, timeframe=timeframe, geo=geo, gprop='')
+    rqd = pytrend.related_queries()
+    key_list = get_related_keyword(kw_list,rqd)
+    df_dict = {}
+    for key in key_list:
+        keyword_list = [key]
+        #Build a payload
+        pytrend.build_payload(keyword_list, cat=0, timeframe=timeframe, geo=geo, gprop='')
+        # Interest Over Time
+        interest_over_time_df = pytrend.interest_over_time()
+        df_dict[key] = interest_over_time_df[key].tolist()
+    df = pd.DataFrame(df_dict)
+    corr = df.corr(method='pearson')
     
 
 def main():
+    '''
     pytrend = setup_pytrend()
     kw_list,num_keyword = get_input()
     print("kw_list :: ", kw_list)
@@ -257,7 +273,13 @@ def main():
     print("Correlation ::\n",corr)
     corr_result = result.corr(method='pearson')
     print("Correlation Full ::\n",corr_result)
+<<<<<<< HEAD
+    '''
+    list_to_json(['trump','taiwan'])
+    
+=======
     """
+>>>>>>> b4ed397baf881a9b35483b9e0c97a9e5860a7567
 
 if __name__ == '__main__':
     main()
