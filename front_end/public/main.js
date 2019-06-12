@@ -31,6 +31,7 @@ root.r = 400;
 refresh_chart = function(data){
     root = pack(data);
     focus = root;
+    d3.select("body").select("svg").selectAll("*").remove();
 
     const svg = d3.select("body").select("svg")
         .attr("x", 0)
@@ -103,19 +104,24 @@ var addInput = function(num){
     for(var i=0; i<num; i++){
         const name = "keyword " + i;
         const id = "keyword_"+i;
-        var input_div = $('<div class="input-group input_box"><input type="text" class="form-control" id="'+id+'" placeholder="'+name+'" aria-label="'+name+'" aria-describedby="basic-addon2"><div class="input-group-append"><button id="'+id+"_btn"+'" class="btn btn-outline-secondary input_btn" type="button">Add</button></div></div>');
+        var input_div = $('<div class="input-group input_box"><input type="text" class="form-control" id="'+id+'" placeholder="'+name+'" aria-label="'+name+'" aria-describedby="basic-addon2"></div>');
+        //<div class="input-group-append"><button id="'+id+"_btn"+'" class="btn btn-outline-secondary input_btn" type="button">Add</button></div>
         input_div.appendTo('#input_list');
     }
 }
 
 var btn_click=function(e){
-    var name = e.currentTarget.id;
-    var id = "#"+name.substring(0, name.indexOf('_btn'));
-    var text = $(id).val();
-
+    //var name = e.currentTarget.id;
+    var arg = ""
+    for(var i=0; i<num_input; i++){
+        var name = "keyword_"+i;
+        var id = "#"+name;
+        var text = $(id).val();
+        arg = arg + text + ","
+    }
     $.ajax({
         method:"get",
-        url:"./keyword?item="+text,
+        url:"./keyword?item="+arg,
         success: function(data){
             console.log("Get data from keyword:");
             console.log(data);
