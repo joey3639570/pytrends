@@ -244,16 +244,19 @@ def main():
     #print(iot.index.tolist())
     #np_ibr = ibr.values
     print("----")
-    key_list = get_related_keyword(kw_list,rqd)
-    draw_iot(iot,num_keyword)
+    print(kw_list)
+    #key_list = get_related_keyword(kw_list,rqd)
+    #draw_iot(iot,num_keyword)
+    
     #print(ibr.index.tolist())
     #draw_ibr(np_ibr,num_keyword,ibr.index.tolist())
+    """
     result = analyze_for_more_than_five(pytrend,key_list,timeframe,geo)
     corr = correlation(iot)
     print("Correlation ::\n",corr)
     corr_result = result.corr(method='pearson')
     print("Correlation Full ::\n",corr_result)
-    
+    """
 
 if __name__ == '__main__':
     main()

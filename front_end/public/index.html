@@ -2,16 +2,23 @@
 <html>
     <head> 
         <title>Pytrend Visualization</title>
-        <!--script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script--!>
-        <link href="/public/index.css" rel="stylesheet">
+        <link href="/css/index.css" rel="stylesheet">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://d3js.org/d3.v5.min.js"></script>
-        <!--script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script--!>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
     <body>
-        <div>
-		<svg></svg>
-        <script src="main.js"></script>
+        <div class="row">
+            <div class="col-md-10 container chart">
+                <h1>Packing Double Chart</h1>
+                <svg></svg>
+            </div>
+            <div class="col-md-2 keyword_container">
+                <h1>Keyword List</h1>
+                <div id="input_list" class="input_div">
+                </div>
+            </div>
         </div>
+        <script src="main.js"></script>
     </body>
 </html>
