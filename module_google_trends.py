@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 import random as rd
+import module_grouping
 
 geo_list = ['TW','US','']
 
@@ -241,7 +242,6 @@ def list_to_json(kw_list,timeframe='today 1-m',geo='TW'):
         pytrend.build_payload(keyword_list, cat=0, timeframe=timeframe, geo=geo, gprop='')
         # Interest Over Time
         interest_over_time_df = pytrend.interest_over_time()
-        #print(key)
         df_dict[key] = interest_over_time_df[key].tolist()
     df = pd.DataFrame(df_dict)
     corr = df.corr(method='pearson')
@@ -261,18 +261,25 @@ def main():
     #print(iot.index.tolist())
     #np_ibr = ibr.values
     print("----")
-    key_list = get_related_keyword(kw_list,rqd)
-    draw_iot(iot,num_keyword)
+    print(kw_list)
+    #key_list = get_related_keyword(kw_list,rqd)
+    #draw_iot(iot,num_keyword)
+    
     #print(ibr.index.tolist())
     #draw_ibr(np_ibr,num_keyword,ibr.index.tolist())
+    """
     result = analyze_for_more_than_five(pytrend,key_list,timeframe,geo)
     corr = correlation(iot)
     print("Correlation ::\n",corr)
     corr_result = result.corr(method='pearson')
     print("Correlation Full ::\n",corr_result)
+<<<<<<< HEAD
     '''
     list_to_json(['trump','taiwan'])
     
+=======
+    """
+>>>>>>> b4ed397baf881a9b35483b9e0c97a9e5860a7567
 
 if __name__ == '__main__':
     main()
