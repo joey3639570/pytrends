@@ -4,6 +4,7 @@ import logging
 from urllib.parse import urlparse
 from os import path
 import json
+import module_google_trends as m_trend
 
 PORT = 10418
 # Handler to deal with rhttp requests
@@ -28,19 +29,21 @@ mimedic = [
         ]
 # Test json
 json_data = {
-    "name": "test",
-    "children":[
-        {"name":"ga",
-            "children":[
-                {"name":"a", "value":2}, 
-                {"name":"c", "value":2}, 
-                {"name":"b", "value":2}]},
-        {"name":"ga",
-            "children":[
-                {"name":"a", "value":2}, 
-                {"name":"c", "value":2}, 
-                {"name":"b", "value":2}]}]
-}
+        "name": "test",
+        "children":[
+            {
+                "name":"Apple",
+                "children":[
+                    {"name":"like", "value":6}, 
+                    {"name":"dislike", "value":3}, 
+                    {"name":"I dont know", "value":2}]},
+            {
+                "name":"Banana",
+                "children":[
+                        {"name":"like", "value":1}, 
+                        {"name":"dislike", "value":4}, 
+                        {"name":"I dont know", "value":2}]}
+                ]}
 
 # Class to handle http request
 class RequestHandler(Handler):
@@ -48,7 +51,7 @@ class RequestHandler(Handler):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
-    
+
     def do_GET(self):
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         #self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
@@ -65,29 +68,29 @@ class RequestHandler(Handler):
             self.end_headers()
             # Write back correlation json file
             self.wfile.write(json.dumps(json_data).encode('utf-8'))
-        # By default, redirect to index.html
+            # By default, redirect to index.html
         elif filepath.endswith('/'):
             filepath += 'index.html'
-        # Parse each request to send back file
+            # Parse each request to send back file
         else:
             sendReply = False
-             filename, fileext = path.splitext(filepath)
-             # Check the request file is legal
-             for e in mimedic:
+            filename, fileext = path.splitext(filepath)
+            # Check the request file is legal
+            for e in mimedic:
                  if e[0] == fileext:
                      mimetype = e[1]
                      sendReply = True
 
-             if sendReply == True:
-                 try:
-                     with open(path.realpath(curdir + sep + filepath),'rb') as f:
-                         content = f.read()
-                         self.send_response(200)
-                         self.send_header('Content-type',mimetype)
-                         self.end_headers()
-                         self.wfile.write(content)
-                 except IOError:
-                     self.send_error(404,'File Not Found: %s' % self.path)
+            if sendReply == True:
+                try:
+                    with open(path.realpath(curdir + sep + filepath),'rb') as f:
+                        content = f.read()
+                        self.send_response(200)
+                        self.send_header('Content-type',mimetype)
+                        self.end_headers()
+                        self.wfile.write(content)
+                except IOError:
+                    self.send_error(404,'File Not Found: %s' % self.path)
 
 def server_run():
     logging.info('Starting httpd...\n')

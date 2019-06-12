@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 import random as rd
+import module_grouping
 
 geo_list = ['TW','US','']
 
