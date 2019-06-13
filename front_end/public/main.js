@@ -21,7 +21,7 @@ color = d3.scaleLinear()
     .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
     .interpolate(d3.interpolateHcl)
 
-var root = pack(data);
+root = pack(data);
 let focus = root;
 let view;
 root.r = 400;
@@ -66,10 +66,15 @@ refresh_chart = function(data){
 
 
     function zoomTo(v) {
-        const k = width / v[2];
+        if (v[2] < 0.1)
+            var k = 1;
+        else
+            var k = width / v[2];
 
         view = v;
 
+        if(isNaN(d.x-v[0])||isNaN(d.y-v[0]))
+            return;
         label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
         node.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
         node.attr("r", d => d.r * k);

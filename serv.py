@@ -66,8 +66,18 @@ class RequestHandler(Handler):
             self.send_response(200)
             self.send_header('Content-type', 'json')
             self.end_headers()
+            query = query.split('=')
+            keyword_list = query[1].split(',')
+            #keyword_list = keyword_list.remove('')
+            while("" in keyword_list) : 
+                keyword_list.remove("") 
+            print(keyword_list)
+            json_obj = m_trend.get_keyword_tree(keyword_list)
+
+            print(json_obj)
             # Write back correlation json file
-            self.wfile.write(json.dumps(json_data).encode('utf-8'))
+            #self.wfile.write(json.dumps(json_data).encode('utf-8'))
+            self.wfile.write(json_obj.encode('utf-8'))
             # By default, redirect to index.html
         elif filepath.endswith('/'):
             filepath += 'index.html'

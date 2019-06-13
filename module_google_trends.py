@@ -230,7 +230,7 @@ def analyze_for_more_than_five(pytrend_object,keylist, timeframe, geo):
     df = pd.DataFrame(df_dict)
     return df
 
-def list_to_json(kw_list,timeframe='today 1-m',geo='TW'):
+def get_keyword_tree(kw_list,timeframe='today 1-m',geo='TW'):
     pytrend = TrendReq()
     pytrend.build_payload(kw_list, cat=0, timeframe=timeframe, geo=geo, gprop='')
     rqd = pytrend.related_queries()
@@ -245,7 +245,8 @@ def list_to_json(kw_list,timeframe='today 1-m',geo='TW'):
         df_dict[key] = interest_over_time_df[key].tolist()
     df = pd.DataFrame(df_dict)
     corr = df.corr(method='pearson')
-    
+    json_obj = module_grouping.get_corr_json(corr, rqd)
+    return json_obj
 
 def main():
     '''
@@ -267,19 +268,13 @@ def main():
     
     #print(ibr.index.tolist())
     #draw_ibr(np_ibr,num_keyword,ibr.index.tolist())
-    """
     result = analyze_for_more_than_five(pytrend,key_list,timeframe,geo)
     corr = correlation(iot)
     print("Correlation ::\n",corr)
     corr_result = result.corr(method='pearson')
     print("Correlation Full ::\n",corr_result)
-<<<<<<< HEAD
-    '''
     list_to_json(['trump','taiwan'])
-    
-=======
-    """
->>>>>>> b4ed397baf881a9b35483b9e0c97a9e5860a7567
+    '''
 
 if __name__ == '__main__':
     main()
